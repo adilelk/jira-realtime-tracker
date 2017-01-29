@@ -1,0 +1,127 @@
+<% layout('template/layout') -%>
+
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+    <!-- right column -->
+
+    <div class="col-md-12" style="margin-bottom: 15px;" id="actions">
+        <!-- Box buttons -->
+        <button class="btn btn-primary" style="float: right;" v-on:click="save">Save</button>
+        <!-- End Box buttons -->
+    </div>
+
+    <div class="col-md-6">
+      <!-- Box projects -->
+      <div class="box box-primary">
+          <!-- box-header -->
+          <div class="box-header with-border">
+              <h3 class="box-title">Projects to track : </h3>
+          </div>
+          <!-- end box-header -->
+          <!-- box-body -->
+          <div class="box-body">
+            <!-- list of projects -->
+            <div class="form-group" id="projects" >
+                <div class="checkbox" v-for="project in projects">
+                    <label>
+                        <input type="checkbox" v-bind:id="project.key" v-bind:value="project.key" v-model="selectedProjects" >
+                        {{ project.name }} ({{ project.key }})
+                    </label>
+                </div>
+            </div>
+            <!-- list of projects -->
+           </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- End Box projects -->
+
+      <!-- Box statuses -->
+      <div id="statuses" v-if="show">
+          <!-- list of statuses -->
+          <div class="box box-success" v-for="project in projects">
+              <!-- box-header -->
+              <div class="box-header with-border">
+                <h3 class="box-title">Statuses to track for project: {{ project.project }}</h3>
+              </div>
+              <!-- end box-header -->
+              <!-- box-body -->
+              <div class="box-body">
+                  <div class="form-group">
+                      <div class="row">
+                          <div class="checkbox hide">&nbsp;</div>
+                          <div class="checkbox col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="status in project.statuses" v-bind:title="status.description" >
+                              <label>
+                                  <input type="checkbox"  v-bind:id="status.id" v-bind:value="getValue(status.id, project.project)" v-model="selectedStatus">
+                                  {{ status.name }}
+                              </label>
+                          </div>
+                          <div class="col-xs-12" v-if="project.error" >
+                              <label>
+                                  {{ project.error }}
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- end box-body -->
+          </div>
+          <!-- list of statuses -->
+      </div>
+      <!-- End Box statuses -->
+    </div>
+
+    <div class="col-md-6">
+        <!-- Box working hours -->
+        <div class="box box-primary">
+            <!-- box-header -->
+            <div class="box-header with-border">
+                <h3 class="box-title">Working hours</h3>
+            </div>
+            <!-- end box-header -->
+            <!-- box-body -->
+            <div class="box-body">
+                <div class="form-group">
+                    <input type="number" class="form-control" id="workingHours" v-bind:value="hours" v-model="hours">
+                </div>
+            </div>
+            <!-- end box-body -->
+        </div>
+        <!-- End Box working hours -->
+
+        <!-- Box users -->
+        <div id="users" v-if="show">
+            <div class="box box-primary" v-for="project in projects">
+                <!-- box-header -->
+                <div class="box-header with-border">
+                    <h3 class="box-title">Users to track for project: {{ project.project }}</h3>
+                </div>
+                <!-- end box-header -->
+                <!-- box-body -->
+                <div class="box-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="checkbox hide">&nbsp;</div>
+                            <div class="checkbox col-xs-12 col-sm-6" v-for="user in project.users" >
+                                <label>
+                                    <input type="checkbox"  v-bind:id="user.key" v-bind:value="getValue(user.key, project.project)" v-model="selectedUsers">
+                                    {{ user.displayName }}
+                                </label>
+                            </div>
+                            <div class="col-xs-12" v-if="project.error" >
+                                <label>
+                                    {{ project.error }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end box-body -->
+            </div>
+        </div>
+        <!-- End Box users -->
+    </div>
+    <!-- right column -->
+  </div>
+  <!-- /.row -->
+</section>
