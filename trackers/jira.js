@@ -1,5 +1,7 @@
 
-exports.factory = function(config) {
+module.exports = function(config) {
+
+    this.name = 'jira';
 
     var Client = require('node-rest-client').Client;
 

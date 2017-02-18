@@ -2,44 +2,86 @@
 Vue.use(VueSocketio, 'http://localhost:3000');
 window.addEventListener('load', function () {
 
+    var checkBoxesList = Vue.extend({
+      props: ['id', 'value', 'description', 'status'],
+      template: '#list-checkboxes-template',
+      methods: {
+        changeStatus: function() {
+            this.selected = !this.selected;
+            if (this.selected) {
+                vmProjects.$socket.emit('saveProject', {id: this.id, key: this.value});
+            } else {
+                vmProjects.$socket.emit('deleteProject', {id: this.id, key: this.value});
+            }
+        }
+      }
+    });
+
+    Vue.component('list-checkboxes', checkBoxesList);
+
     var vmProjects = new Vue({
+        el: '#projects',
+        data: {
+            projects: []
+        },
+        mounted : function() {
+            this.fetch();
+        },
+        methods:
+        {
+            fetch: function() {
+                this.$socket.emit('listProjects')
+            }
+        },
+        sockets:{
+            listProjectsSuccess: function(projects) {
+                console.log(projects);
+                vmProjects.$data.projects = projects;
+            },
+            listProjectsFailed: function(projects){
+                console.log('could not load list of projects: ' + projects);
+            }
+        }
+    });
+
+
+
+
+    /*var vmProjects = new Vue({
         el: '#projects',
         data: {
             projects: [],
             selectedProjects: []
         },
-        mounted : function()
-        {
+        mounted : function() {
             this.fetch();
         },
         methods:
         {
-            fetch: function()
-            {
+            fetch: function() {
                 this.$socket.emit('listProjects')
             }
         },
         watch: {
             selectedProjects: function (val) {
+                this.$socket.emit('saveProjects', val);
                 vmUsers.$data.show = vmStatuses.$data.show = (val.length > 0);
-                for (var i=0; i<vmStatuses.$data.projects.length;i++) {
-                    if (val.indexOf(vmStatuses.$data.projects[i].project) < 0) {
-                        vmStatuses.$data.projects.splice(i, 1);
-                        vmUsers.$data.projects.splice(i, 1);
-                    }
-                }
+                vmStatuses.$data.projectsStatuses = [];
+                vmUsers.$data.projects = [];
                 for (var i=0; i<val.length;i++) {
-                    var project = _.find(vmStatuses.$data.projects, function(obj) { return obj.project == val[i] });
-                    if (typeof project === "undefined") {
-                        vmStatuses.loadStatuses(val[i]);
-                        vmUsers.listUsers(val[i]);
-                    }
+                    vmStatuses.loadStatuses(val[i]);
+                    vmUsers.listUsers(val[i]);
                 }
             }
         },
         sockets:{
-            listProjectsSuccess: function(projects){
-              vmProjects.$data.projects = projects;
+            listProjectsSuccess: function(projects) {
+              vmProjects.$data.projects = projects.all;
+              if (typeof projects.selected !== 'undefined') {
+                  projects.selected.forEach(function(selected) {
+                      vmProjects.$data.selectedProjects.push(selected.name);
+                  });
+              }
             },
             listProjectsFailed: function(projects){
                 console.log('could not load list of projects: ' + projects);
@@ -51,28 +93,37 @@ window.addEventListener('load', function () {
           el: '#statuses',
           data: {
               show: false,
-              projects: [],
+              projectsStatuses: [],
               selectedStatus: []
           },
           watch: {
               selectedStatus: function (val) {
-                  console.log(val);
+                  this.$socket.emit('saveStatuses', val);
               }
           },
           methods: {
               loadStatuses: function(project) {
                   this.$socket.emit('listStatuses', project);
               },
-              getValue: function(statusId, projectId) {
-                  return statusId + '_' + projectId;
+              getValue: function(statusName, projectId) {
+                  return {projectName: projectId, statusName: statusName};
               }
           },
           sockets:{
-              listStatusesSuccess: function(data) {
-                  vmStatuses.$data.projects.push(data);
+              listStatusesSuccess: function(statuses) {
+                  console.log(statuses);
+                  if (typeof statuses.selected !== 'undefined') {
+                      statuses.selected.forEach(function(selected) {
+                          vmStatuses.$data.selectedStatus.push(selected.name);
+                      });
+                  }
+                  vmStatuses.$data.projectsStatuses.push(statuses);
               },
               listStatusesFailed: function(data) {
-                  vmStatuses.$data.projects.push(data);
+                 console.log(data);
+              },
+              saveStatusesFailed: function(data) {
+                 console.log(data);
               }
           }
     });
@@ -94,7 +145,7 @@ window.addEventListener('load', function () {
                   this.$socket.emit('listUsers', project);
               },
               getValue: function(userId, projectId) {
-                  return userId + '_' + projectId;
+                  return {project: projectId, user: userId};
               }
           },
           sockets:{
@@ -113,27 +164,5 @@ window.addEventListener('load', function () {
               show: true,
               hours: 8
           }
-    });
-
-
-    var actions = new Vue({
-          el: '#actions',
-          methods: {
-              save: function() {
-                  var settings = {
-                      projects: vmProjects.$data.selectedProjects,
-                      statuses: vmStatuses.$data.selectedStatus,
-                      hours: workingHours.$data.hours
-                  }
-                  this.$socket.emit('saveSettings', settings);
-              }
-          },
-          sockets:{
-              settingsSaved: function(data){
-
-              }
-          }
-    });
-
-
+    });*/
 });

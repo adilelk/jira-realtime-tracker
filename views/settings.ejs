@@ -1,15 +1,22 @@
 <% layout('template/layout') -%>
 
+<template id="list-checkboxes-template">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox"
+               :value="value"
+               :id="id"
+               :checked="status"
+               @click="changeStatus"/>
+            {{value}} - {{description}}
+        </label>
+    </div>
+</template>
+
 <!-- Main content -->
 <section class="content">
   <div class="row">
     <!-- right column -->
-
-    <div class="col-md-12" style="margin-bottom: 15px;" id="actions">
-        <!-- Box buttons -->
-        <button class="btn btn-primary" style="float: right;" v-on:click="save">Save</button>
-        <!-- End Box buttons -->
-    </div>
 
     <div class="col-md-6">
       <!-- Box projects -->
@@ -23,12 +30,16 @@
           <div class="box-body">
             <!-- list of projects -->
             <div class="form-group" id="projects" >
-                <div class="checkbox" v-for="project in projects">
-                    <label>
-                        <input type="checkbox" v-bind:id="project.key" v-bind:value="project.key" v-model="selectedProjects" >
-                        {{ project.name }} ({{ project.key }})
-                    </label>
-                </div>
+
+                <list-checkboxes
+                    v-for="project in projects"
+                    :id="project.id"
+                    :value="project.key"
+                    :description="project.name"
+                    :status.sync="project.selected"
+                >
+                </list-checkboxes>
+
             </div>
             <!-- list of projects -->
            </div>
@@ -39,10 +50,10 @@
       <!-- Box statuses -->
       <div id="statuses" v-if="show">
           <!-- list of statuses -->
-          <div class="box box-success" v-for="project in projects">
+          <div class="box box-success" v-for="projectStatuses in projectsStatuses">
               <!-- box-header -->
               <div class="box-header with-border">
-                <h3 class="box-title">Statuses to track for project: {{ project.project }}</h3>
+                <h3 class="box-title">Statuses to track for project: {{ projectStatuses.project }}</h3>
               </div>
               <!-- end box-header -->
               <!-- box-body -->
@@ -50,13 +61,13 @@
                   <div class="form-group">
                       <div class="row">
                           <div class="checkbox hide">&nbsp;</div>
-                          <div class="checkbox col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="status in project.statuses" v-bind:title="status.description" >
+                          <div class="checkbox col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="status in projectStatuses.statuses" v-bind:title="status.description" >
                               <label>
-                                  <input type="checkbox"  v-bind:id="status.id" v-bind:value="getValue(status.id, project.project)" v-model="selectedStatus">
+                                  <input type="checkbox"  v-bind:id="status.id" v-bind:value="getValue(status.name, projectStatuses.project)" v-model="selectedStatus">
                                   {{ status.name }}
                               </label>
                           </div>
-                          <div class="col-xs-12" v-if="project.error" >
+                          <div class="col-xs-12" v-if="projectStatuses.error" >
                               <label>
                                   {{ project.error }}
                               </label>

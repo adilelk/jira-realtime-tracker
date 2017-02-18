@@ -17,11 +17,14 @@
   },
   "homepage": "https://github.com/adilelk/jira-realtime-tracker#readme",
   "dependencies": {
+    "colors": "^1.1.2",
     "ejs-locals": "^1.0.2",
     "express": "^4.14.0",
+    "https": "^1.0.0",
     "mysql": "^2.13.0",
     "neo4j-driver": "^1.0.4",
     "node-rest-client": "^2.0.1",
+    "node.extend": "^1.1.6",
     "socket.io": "^1.7.2",
     "vue-socket.io": "^2.1.0"
   }
