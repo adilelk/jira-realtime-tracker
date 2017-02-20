@@ -27,7 +27,7 @@ module.exports = function(config) {
         });
     };
 
-    this.listStatuses = function(project, callbackSuccess, callbackError) {
+    this.listStatuses = function(callbackSuccess, callbackError) {
         var url = this.makeUrl(config.jira.actionsUrls.listStatuses);
         client.get(url, function (data, response) {
             if(response.statusCode == '200') {

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(socket, tracker, modelFactory) {
 
     var projectModel = modelFactory.get('project');
@@ -12,6 +14,12 @@ module.exports = function(socket, tracker, modelFactory) {
 
                 projectModel.getAll(
                     function (rows) {
+                        rows.forEach(function(row) {
+                            let project = projects.find(project => project.id === row.project_id);
+                            if (typeof project !== "undefined") {
+                                project.selected = true;
+                            }
+                        });
                         socket.emit('listProjectsSuccess',projects);
                     },
                     function (error) {

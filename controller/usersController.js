@@ -3,7 +3,7 @@ module.exports = function(socket, tracker) {
         tracker.listUsers(
             project,
             function(users) {
-                socket.emit('listUsersSuccess', {project: project, users: users});
+                socket.emit('listUsersSuccess', {project: project, items: users});
             },
             function(data) {
                 socket.emit('listUsersFailed',  {project: project, users: [], error: data});

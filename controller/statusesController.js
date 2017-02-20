@@ -2,25 +2,14 @@ module.exports = function(socket, tracker, modelFactory) {
 
     socket.on('listStatuses', function(project) {
         tracker.listStatuses(
-            project,
             function(statuses) {
                 statuses.sort(function(a, b) {
                     return a.name.trim().localeCompare(b.name.trim());
                 });
-                var statusModel = modelFactory.get('status');
-                statusModel.get(
-                    ['statuses.id', 'projects.name'],
-                    function(rows) {
-                        socket.emit('listStatusesSuccess', {project: project, statuses: statuses, selected: rows});
-                    },
-                    function(error) {
-                        console.log(error);
-                        socket.emit('listStatusesFailed', {project: project, statuses: [], error: error});
-                    }
-                );
+                socket.emit('listStatusesSuccess', statuses);
             },
             function() {
-                
+
             }
         );
     });
