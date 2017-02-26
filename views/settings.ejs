@@ -1,0 +1,139 @@
+<% layout('template/layout') -%>
+
+<template id="list-projects-template">
+    <div class="checkbox col-md-3" :title="description">
+        <label>
+            <input type="checkbox"
+               :value="value"
+               :id="id"
+               :checked="status"
+               @click="changeStatus"/>
+            {{value}}
+        </label>
+    </div>
+</template>
+
+<template id="list-statuses-template">
+    <div class="checkbox col-md-3" title="description">
+        <label>
+            <input type="checkbox"
+               :value="name"
+               :id="id"
+               :checked="status"
+               @click="changeStatus"/>
+            {{name}}
+        </label>
+    </div>
+</template>
+
+<template id="list-users-template">
+    <div class="checkbox col-md-3" :title="name">
+        <label>
+            <input type="checkbox"
+               :value="shortname"
+               :id="id"
+               :checked="status"
+               @click="changeStatus"/>
+            {{name}}
+        </label>
+    </div>
+</template>
+
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+    <!-- right column -->
+    <div class="col-md-12">
+      <!-- Box projects -->
+      <div class="box box-primary">
+          <!-- box-header -->
+          <div class="box-header with-border">
+              <h3 class="box-title">Projects to track : </h3>
+          </div>
+          <!-- end box-header -->
+          <!-- box-body -->
+          <div class="box-body">
+            <!-- list of projects -->
+            <div class="form-group" id="projects" >
+                <div class="checkbox col-md-3 hide">&nbsp;</div>
+                <list-projects
+                    v-for="project in projects"
+                    :id="project.id"
+                    :value="project.key"
+                    :description="project.name"
+                    :status="project.selected"
+                >
+                </list-projects>
+
+            </div>
+            <!-- list of projects -->
+           </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- End Box projects -->
+    </div>
+    <!-- right column -->
+  </div>
+  <!-- /.row -->
+
+  <div class="row">
+    <!-- right column -->
+    <div class="col-md-12">
+      <!-- Box projects -->
+      <div class="box box-primary">
+          <!-- box-header -->
+          <div class="box-header with-border">
+              <h3 class="box-title">Statuses to track : </h3>
+          </div>
+          <!-- end box-header -->
+          <!-- box-body -->
+          <div class="box-body">
+            <!-- list of projects -->
+            <div class="form-group" id="statuses" >
+                <div class="checkbox col-md-3 hide">&nbsp;</div>
+                <list-statuses
+                    v-for="status in statuses"
+                    :id="status.id"
+                    :name="status.name"
+                    :description="status.description"
+                >
+                </list-statuses>
+
+            </div>
+            <!-- list of projects -->
+           </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- End Box projects -->
+    </div>
+    <!-- right column -->
+  </div>
+
+  <div class="row" id="users">
+      <div class="col-md-12" v-for="user in users">
+          <!-- Box users -->
+          <div class="box box-success">
+              <!-- box-header -->
+              <div class="box-header with-border">
+                  <h3 class="box-title">Settings for {{user.project}} project</h3>
+              </div>
+              <!-- end box-header -->
+              <!-- box-body -->
+              <div class="box-body">
+                  <div class="form-group">
+                      <div class="checkbox col-md-3 hide">&nbsp;</div>
+                      <list-users
+                          v-for="items in user.items"
+                          :project="user.project"
+                          :name="items.displayName"
+                          :shortname="items.key"
+                      >
+                      </list-users>
+                  </div>
+              </div>
+              <!-- end box-body -->
+          </div>
+          <!-- End Box users -->
+      </div>
+  </div>
+</section>

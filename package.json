@@ -2,7 +2,7 @@
   "name": "jira-realtime-tracker",
   "version": "0.0.1",
   "description": "A realtime JIRA tracker dashboard",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,15 @@
   },
   "homepage": "https://github.com/adilelk/jira-realtime-tracker#readme",
   "dependencies": {
+    "colors": "^1.1.2",
+    "ejs-locals": "^1.0.2",
     "express": "^4.14.0",
-    "socket.io": "^1.7.2"
+    "https": "^1.0.0",
+    "mysql": "^2.13.0",
+    "neo4j-driver": "^1.0.4",
+    "node-rest-client": "^2.0.1",
+    "node.extend": "^1.1.6",
+    "socket.io": "^1.7.2",
+    "vue-socket.io": "^2.1.0"
   }
 }
