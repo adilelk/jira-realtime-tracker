@@ -16,7 +16,6 @@ module.exports = function(socket, tracker, modelFactory) {
 
     socket.on('saveStatuses', function(statuses) {
 
-        var projectModel = modelFactory.get('project');
         var statusModel = modelFactory.get('status');
 
         //statusModel.deleteAll();
@@ -34,7 +33,6 @@ module.exports = function(socket, tracker, modelFactory) {
                         statusModel.name = status.statusName,
                         statusModel.projectId = rows[0].id,
                         statusModel.save();
-                        console.log('save ' + statusModel.name);
                     },
                     function(error) {
 

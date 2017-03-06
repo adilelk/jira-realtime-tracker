@@ -10,4 +10,9 @@ module.exports = function(socket, tracker) {
             }
         );
     });
+
+    socket.on('getTrackedUsers', function(project) {
+        
+    });
+
 }

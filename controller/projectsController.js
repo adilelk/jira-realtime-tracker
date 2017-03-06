@@ -62,19 +62,29 @@ module.exports = function(socket, tracker, modelFactory) {
     });
 
     socket.on('deleteProject', function(project) {
-
         var projectModel = modelFactory.get('project');
-
         projectModel.delete(
             {project_name: project.key},
             function(result) {
-                console.log(result);
+                
             },
             function(error) {
                 console.log(error);
             }
-    )
-
+        );
     });
+
+    socket.on('listSelectedProjects', function(project) {
+        var projectModel = modelFactory.get('project');
+        projectModel.getAll(
+            function (rows) {
+                socket.emit('listSelectedProjectsSuccess',rows);
+            },
+            function (error) {
+                socket.emit('listSelectedProjectsFailed', error);
+            }
+        );
+    });
+
 
 }

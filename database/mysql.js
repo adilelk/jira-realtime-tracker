@@ -22,6 +22,8 @@ module.exports = function(config) {
                 process.exit(1);
             }
         });
+
+        this.init();
     };
 
     this.select = function(fields) {
@@ -99,7 +101,6 @@ module.exports = function(config) {
 
     this.execute = function(success, error) {
         var query = this.query;
-        console.log(query);
         this.query = '';
         var query = this.connection.query(query, this.parameters, function(err, rows, fields) {
             this.query = '';
@@ -128,9 +129,7 @@ module.exports = function(config) {
                          + ');',
             'statuses' : 'create table `statuses` ('
                             + '`id` int(11) not null primary key auto_increment,'
-                            + '`name` VARCHAR(100) not null,'
-                            + '`project_id` int(11) not null,'
-                            + 'constraint `project_fk_1` foreign key (`project_id`) references `projects` (`id`) on delete cascade on update cascade'
+                            + '`name` VARCHAR(100) not null'
                          + ');',
             'users'    : 'create table `users` ('
                              + '`id` int(11) not null primary key auto_increment,'
